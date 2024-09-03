@@ -16,7 +16,7 @@ public class Course {
 
     @Override
     public String toString() {
-        return name + " (" + credit + " credit)";
+        return name + " (" + credit + " credits)" + (prerequisiteCourse != null ? " (Prerequisite: " + prerequisiteCourse.name + ")" : "");
     }
 
 }
