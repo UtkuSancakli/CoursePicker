@@ -21,7 +21,7 @@ public class Course {
         StringBuilder result = new StringBuilder(name + " (" + credit + " credits)");
 
         for (Course course : prerequisiteCourses) {
-            result.append(", ").append(course);
+            result.append(", ").append("Prerequisite: '").append(course.name).append("' passed✅");
         }
 
         return result.toString();

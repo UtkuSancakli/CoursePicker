@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
@@ -40,17 +42,26 @@ public class Main {
 
         ArrayList<ArrayList<Course>> result = findCombinations(AllCourses, totalCreditLimit, minimumWantedCredit, yourCompletedCourses, isRetakingOk);
 
+        result.sort(new Comparator<ArrayList<Course>>() {
+            @Override
+            public int compare(ArrayList<Course> o1, ArrayList<Course> o2) {
+                int totalCreditsO1 = o1.stream().mapToInt(c -> c.credit).sum();
+                int totalCreditsO2 = o2.stream().mapToInt(c -> c.credit).sum();
+                return Integer.compare(totalCreditsO2, totalCreditsO1);
+            }
+        });
+
         for (ArrayList<Course> combination : result) {
 
-            //int creditTaken = 0;
+            int usedCredit =0;
             System.out.println("Combination:");
 
             for (Course course : combination) {
                 System.out.println("- " + course);
-                //creditTaken += course.credit;
+                usedCredit += course.credit;
             }
 
-            //System.out.println("Total Credit Taken: " + creditTaken);
+            System.out.println("Total Credit Taken: " + usedCredit);
             System.out.println();
         }
     }
