@@ -3,16 +3,16 @@ import java.util.ArrayList;
 public class Course {
     String name;
     int credit;
-    ArrayList <Course> prerequisiteCourse;
+    ArrayList <Course> prerequisiteCourses;
 
     public Course(String name, int credit) {
         this.name = name;
         this.credit = credit;
-        this.prerequisiteCourse = new ArrayList<Course>();
+        this.prerequisiteCourses = new ArrayList<Course>();
     }
 
     public void addPrerequisiteCourses(Course course) {
-        prerequisiteCourse.add(course);
+        prerequisiteCourses.add(course);
     }
 
     @Override
@@ -20,12 +20,11 @@ public class Course {
 
         StringBuilder result = new StringBuilder(name + " (" + credit + " credits)");
 
-        for (Course course : prerequisiteCourse) {
+        for (Course course : prerequisiteCourses) {
             result.append(", ").append(course);
         }
 
         return result.toString();
-
 
     }
 

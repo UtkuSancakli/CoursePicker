@@ -84,12 +84,14 @@ public class Main {
         }
     }
 
-    private static boolean checkPrerequisites(ArrayList<Course> courseList, ArrayList<Course> completedCourses) {
-        for (Course course : courseList) {
-            if (course.prerequisiteCourse != null &&
-                    !courseList.contains(course.prerequisiteCourse) &&
-                    !completedCourses.contains(course.prerequisiteCourse)) {
-                return false;
+    private static boolean checkPrerequisites(ArrayList<Course> tempList, ArrayList<Course> completedCourses) {
+        for (Course course : tempList) {
+            // Check if the course has prerequisites
+            for (Course prerequisite : course.prerequisiteCourses) {
+                // If the prerequisite is not in tempList or completedCourses, the prerequisite is not met
+                if (!tempList.contains(prerequisite) && !completedCourses.contains(prerequisite)) {
+                    return false;
+                }
             }
         }
         return true;
