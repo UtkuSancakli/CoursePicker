@@ -1,22 +1,32 @@
+import java.util.ArrayList;
+
 public class Course {
     String name;
     int credit;
-    Course prerequisiteCourse;
+    ArrayList <Course> prerequisiteCourse;
 
     public Course(String name, int credit) {
         this.name = name;
         this.credit = credit;
+        this.prerequisiteCourse = new ArrayList<Course>();
     }
 
-    public Course(String name, int credit, Course prerequisiteCourse) {
-        this.name = name;
-        this.credit = credit;
-        this.prerequisiteCourse = prerequisiteCourse;
+    public void addPrerequisiteCourses(Course course) {
+        prerequisiteCourse.add(course);
     }
 
     @Override
     public String toString() {
-        return name + " (" + credit + " credits)" + (prerequisiteCourse != null ? " (Prerequisite: " + prerequisiteCourse.name + ")" : "");
+
+        StringBuilder result = new StringBuilder(name + " (" + credit + " credits)");
+
+        for (Course course : prerequisiteCourse) {
+            result.append(", ").append(course);
+        }
+
+        return result.toString();
+
+
     }
 
 }

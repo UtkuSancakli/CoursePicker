@@ -6,10 +6,21 @@ public class Main {
         Course math101 = new Course("Mathematics 101", 4);
         Course phys101 = new Course("Physics 101", 3);
         Course chem101 = new Course("Chemistry 101", 3);
-        Course math102 = new Course("Mathematics 102", 2, math101);
-        Course phys102 = new Course("Physics 102", 4, phys101);
+
+        Course math102 = new Course("Mathematics 102", 2);
+        math102.addPrerequisiteCourses(math101);
+
+        Course phys102 = new Course("Physics 102", 4);
+        phys102.addPrerequisiteCourses(phys101);
+
         Course history = new Course("History", 2);
+
         Course philosophy = new Course("Philosophy", 1);
+
+        Course cs101 = new Course("CS101", 4);
+        cs101.addPrerequisiteCourses(phys101);
+        cs101.addPrerequisiteCourses(math101);
+
 
         ArrayList<Course> yourCompletedCourses = new ArrayList<>(); //All the courses you've already completed must be added to this list.
         yourCompletedCourses.add(math101);
