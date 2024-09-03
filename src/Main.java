@@ -2,19 +2,27 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
+
+        Course math = new Course("Mathematics", 4);
+        Course physics = new Course("Physics", 3, math);
+        Course chemistry = new Course("Chemistry", 3, math);
+        Course biology = new Course("Biology", 2);
+        Course literature = new Course("Literature", 2);
+        Course history = new Course("History", 3);
+        Course philosophy = new Course("Philosophy", 2);
+
         ArrayList<Course> courses = new ArrayList<>();
-        courses.add(new Course("Matematik", 4));
-        courses.add(new Course("Fizik", 3));
-        courses.add(new Course("Kimya", 3));
-        courses.add(new Course("Biyoloji", 2));
-        courses.add(new Course("Edebiyat", 2));
-        courses.add(new Course("Tarih", 3));
-        courses.add(new Course("Felsefe", 2));
+        courses.add(math);
+        courses.add(physics);
+        courses.add(chemistry);
+        courses.add(biology);
+        courses.add(literature);
+        courses.add(history);
+        courses.add(philosophy);
 
         int yourTotalCredit = 6;
 
         ArrayList<ArrayList<Course>> answer = newCombinations(courses, yourTotalCredit);
-
 
         for (ArrayList<Course> combination : answer) {
             System.out.println("combination:");
@@ -36,13 +44,24 @@ public class Main {
         int creditRightNow = tempList.stream().mapToInt(d -> d.credit).sum();
 
         if (creditRightNow == yourTotalCredit) {
-            answer.add(new ArrayList<>(tempList));
-        } else if (creditRightNow < yourTotalCredit) {
+            if (checkPrerequisites(tempList)) {
+                answer.add(new ArrayList<>(tempList));
+            }
+        }
+        else if (creditRightNow < yourTotalCredit) {
             for (int i = start; i < courses.size(); i++) {
                 tempList.add(courses.get(i));
                 calculateCombination(courses, tempList, i + 1, yourTotalCredit, answer);
                 tempList.removeLast();
             }
         }
+    }
+    private static boolean checkPrerequisites(ArrayList<Course> courseList) {
+        for (Course course : courseList) {
+            if (course.prerequisiteCourse != null && !courseList.contains(course.prerequisiteCourse)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
