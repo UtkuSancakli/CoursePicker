@@ -19,6 +19,9 @@ public class Course {
     public String toString() {
 
         StringBuilder result = new StringBuilder(name + " (" + credit + " credits)");
+        while (result.length() != 48){
+            result.append(" ");
+        }
 
         for (Course course : prerequisiteCourses) {
             result.append(", ").append("Prerequisite: '").append(course.name).append("' passed✅");
