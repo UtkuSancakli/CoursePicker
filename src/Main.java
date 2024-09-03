@@ -39,6 +39,7 @@ public class Main {
         calculateCombination(courses, new ArrayList<>(), 0, yourTotalCredit, answer);
         return answer;
     }
+
     private static void calculateCombination(ArrayList<Course> courses, ArrayList<Course> tempList, int start, int yourTotalCredit, ArrayList<ArrayList<Course>> answer) {
 
         int creditRightNow = tempList.stream().mapToInt(d -> d.credit).sum();
@@ -56,6 +57,7 @@ public class Main {
             }
         }
     }
+
     private static boolean checkPrerequisites(ArrayList<Course> courseList) {
         for (Course course : courseList) {
             if (course.prerequisiteCourse != null && !courseList.contains(course.prerequisiteCourse)) {
