@@ -3,68 +3,81 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
 
-        Course math = new Course("Mathematics", 4);
-        Course physics = new Course("Physics", 3, math);
-        Course chemistry = new Course("Chemistry", 3, math);
-        Course biology = new Course("Biology", 2, chemistry);
-        Course literature = new Course("Literature", 2);
-        Course history = new Course("History", 3);
-        Course philosophy = new Course("Philosophy", 2);
+        Course math101 = new Course("Mathematics 101", 4);
+        Course phys101 = new Course("Physics 101", 3);
+        Course chem101 = new Course("Chemistry 101", 3);
+        Course math102 = new Course("Mathematics 102", 2, math101);
+        Course phys102 = new Course("Physics 102", 4, phys101);
+        Course history = new Course("History", 2);
+        Course philosophy = new Course("Philosophy", 1);
 
-        ArrayList<Course> yourCompletedCourses = new ArrayList<>();
-        yourCompletedCourses.add(math);
+        ArrayList<Course> yourCompletedCourses = new ArrayList<>(); //All the courses you've already completed must be added to this list.
+        yourCompletedCourses.add(math101);
 
-        ArrayList<Course> AllCourses = new ArrayList<>();
-        AllCourses.add(math);
-        AllCourses.add(physics);
-        AllCourses.add(chemistry);
-        AllCourses.add(biology);
-        AllCourses.add(literature);
+        ArrayList<Course> AllCourses = new ArrayList<>(); //All the courses must be added to this list.
+        AllCourses.add(math101);
+        AllCourses.add(phys101);
+        AllCourses.add(chem101);
+        AllCourses.add(math102);
+        AllCourses.add(phys102);
         AllCourses.add(history);
         AllCourses.add(philosophy);
 
-        int yourTotalCredit = 6;
+        int totalCreditLimit = 6; //Maximum amount of credits you can take.
+        int minimumWantedCredit = 4; // Minimum total credits you want to take.
+        boolean isRetakingOk = false; // If you want to see the results with retaking the courses, this must be true.
 
-        ArrayList<ArrayList<Course>> answer = newCombinations(AllCourses, yourTotalCredit, yourCompletedCourses);
+        ArrayList<ArrayList<Course>> result = findCombinations(AllCourses, totalCreditLimit, minimumWantedCredit, yourCompletedCourses, isRetakingOk);
 
-        for (ArrayList<Course> combination : answer) {
-            System.out.println("combination:");
+        for (ArrayList<Course> combination : result) {
+
+            //int creditTaken = 0;
+            System.out.println("Combination:");
+
             for (Course course : combination) {
                 System.out.println("- " + course);
+                //creditTaken += course.credit;
             }
+
+            //System.out.println("Total Credit Taken: " + creditTaken);
             System.out.println();
         }
     }
 
-    private static ArrayList<ArrayList<Course>> newCombinations(ArrayList<Course> courses, int yourTotalCredit, ArrayList<Course> yourCompletedCourses) {
+    public static ArrayList<ArrayList<Course>> findCombinations(ArrayList<Course> courses, int totalCreditLimit, int minimumWantedCredit, ArrayList<Course> completedCourses, boolean isRetakingOk) {
 
-        ArrayList<ArrayList<Course>> answer = new ArrayList<>();
-        calculateCombination(courses, new ArrayList<>(), 0, yourTotalCredit, yourCompletedCourses, answer);
-        return answer;
+        ArrayList<ArrayList<Course>> result = new ArrayList<>();
+        calculateCombinations(courses, new ArrayList<>(), 0, totalCreditLimit, minimumWantedCredit, completedCourses, isRetakingOk, result);
+        return result;
     }
 
-    private static void calculateCombination(ArrayList<Course> courses, ArrayList<Course> tempList, int start, int yourTotalCredit, ArrayList<Course> yourCompletedCourses, ArrayList<ArrayList<Course>> answer) {
+    private static void calculateCombinations(ArrayList<Course> courses, ArrayList<Course> tempList, int start, int totalCreditLimit, int minimumWantedCredit, ArrayList<Course> completedCourses, boolean isRetakingOk, ArrayList<ArrayList<Course>> resultArray) {
 
-        int creditRightNow = tempList.stream().mapToInt(d -> d.credit).sum();
+        int currentTotalCredits = tempList.stream().mapToInt(c -> c.credit).sum();
 
-        if (creditRightNow == yourTotalCredit) {
-            if (checkPrerequisites(tempList, yourCompletedCourses)) {
-               answer.add(new ArrayList<>(tempList));
+        if (currentTotalCredits >= minimumWantedCredit && currentTotalCredits <= totalCreditLimit) {
+            if (checkPrerequisites(tempList, completedCourses)) {
+                resultArray.add(new ArrayList<>(tempList));
             }
-        } else if (creditRightNow < yourTotalCredit) {
+        }
+
+        if (currentTotalCredits < totalCreditLimit) {
             for (int i = start; i < courses.size(); i++) {
-                tempList.add(courses.get(i));
-                calculateCombination(courses, tempList, i + 1, yourTotalCredit, yourCompletedCourses, answer);
-                tempList.removeLast();
+                Course course = courses.get(i);
+                if (isRetakingOk || !completedCourses.contains(course)) {
+                    tempList.add(course);
+                    calculateCombinations(courses, tempList, i + 1, totalCreditLimit, minimumWantedCredit, completedCourses, isRetakingOk, resultArray);
+                    tempList.removeLast();
+                }
             }
         }
     }
 
-    private static boolean checkPrerequisites(ArrayList<Course> courseList, ArrayList<Course> yourCompletedCourses) {
+    private static boolean checkPrerequisites(ArrayList<Course> courseList, ArrayList<Course> completedCourses) {
         for (Course course : courseList) {
             if (course.prerequisiteCourse != null &&
                     !courseList.contains(course.prerequisiteCourse) &&
-                    !yourCompletedCourses.contains(course.prerequisiteCourse)) {
+                    !completedCourses.contains(course.prerequisiteCourse)) {
                 return false;
             }
         }
